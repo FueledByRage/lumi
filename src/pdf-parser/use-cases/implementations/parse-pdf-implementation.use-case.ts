@@ -2,9 +2,13 @@ import pdfParse from 'pdf-parse';
 import { ParsePdfRequest, ParsePdfUseCase } from '../parse-pdf.use-case';
 import { GetFileReadableUseCase } from 'src/file/application/get-file-readable.use-case';
 import { Readable } from 'stream';
+import { Inject, Injectable } from '@nestjs/common';
 
+@Injectable()
 export class ExtractFileDataUseCaseImpl implements ParsePdfUseCase {
-  constructor(private readonly getReadableFile: GetFileReadableUseCase) {}
+  constructor(
+    @Inject('GetFileReadableUseCase')
+    private readonly getReadableFile: GetFileReadableUseCase) {}
 
   async execute({ pdfUrl }: ParsePdfRequest) {
     try {

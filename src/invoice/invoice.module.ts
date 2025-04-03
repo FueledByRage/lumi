@@ -4,6 +4,8 @@ import { ReadInvoiceFileUseCaseImplementation } from './use-cases/implementation
 import { SaveInvoiceUseCaseImpl } from './use-cases/implementations/save-invoice-sequelize.use-case';
 import { PdfParserModule } from 'src/pdf-parser/pdf-parser.module';
 import { HandleInvoiceUploadUseCaseImpl } from './use-cases/implementations/handle-invoice-upload.use-case';
+import { InvoiceController } from './invoice.controller';
+import { FileModule } from 'src/file/file.module';
 
 @Module({
   imports: [
@@ -11,8 +13,9 @@ import { HandleInvoiceUploadUseCaseImpl } from './use-cases/implementations/hand
       name: 'invoice',
     }),
     PdfParserModule,
+    FileModule,
   ],
-  controllers: [],
+  controllers: [InvoiceController],
   providers: [
     {
       provide: 'ReadInvoiceFileUseCase',

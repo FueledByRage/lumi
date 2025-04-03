@@ -1,4 +1,4 @@
-import { GetObjectCommand, S3 } from '@aws-sdk/client-s3';
+import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 export interface GeneratePresignedUrlRequest {
@@ -13,7 +13,7 @@ export interface GeneratePresignedUrlUseCase {
 export class GetFileReadableS3UseCaseImpl
   implements GeneratePresignedUrlUseCase
 {
-  constructor(private readonly s3: S3) {}
+  constructor(private readonly s3: S3Client) {}
 
   async execute(params: GeneratePresignedUrlRequest): Promise<string> {
     try {

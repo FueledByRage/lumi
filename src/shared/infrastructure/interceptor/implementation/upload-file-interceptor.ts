@@ -3,13 +3,23 @@ import {
   UploadFileInterceptor,
   UploadFileRequest,
 } from '../upload-file.interceptor';
-import { CallHandler, ExecutionContext, NestInterceptor } from '@nestjs/common';
+import {
+  CallHandler,
+  ExecutionContext,
+  Inject,
+  Injectable,
+  NestInterceptor,
+} from '@nestjs/common';
 import { Observable } from 'rxjs';
 
+@Injectable()
 export class UploadFileInterceptorImpl
   implements UploadFileInterceptor, NestInterceptor
 {
-  constructor(private readonly uploadFileUseCase: UploadFileUseCase) {}
+  constructor(
+    @Inject('UploadFileUseCase')
+    private readonly uploadFileUseCase: UploadFileUseCase,
+  ) {}
 
   async intercept(
     context: ExecutionContext,
@@ -17,14 +27,14 @@ export class UploadFileInterceptorImpl
   ): Promise<Observable<any>> {
     const request = context.switchToHttp().getRequest();
 
-    request['url'] = await this.execute(request as UploadFileRequest);
+    request['file'] = await this.execute(request as UploadFileRequest);
 
     return next.handle().pipe();
   }
 
   async execute(request: UploadFileRequest) {
     try {
-      await this.uploadFileUseCase.execute(request);
+      return await this.uploadFileUseCase.execute(request);
     } catch (error) {
       console.error('Erro ao fazer upload de arquivo:', error);
       throw new Error('Não foi possível fazer upload do arquivo');

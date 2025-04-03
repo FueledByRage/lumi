@@ -1,10 +1,10 @@
 export interface File {
-  mimeType: string;
+  mimetype: string;
   size: number;
   buffer: Buffer;
   path: string;
   fieldname: string;
-  originalName: string;
+  originalname: string;
   encoding: string;
   destination: string;
 }
