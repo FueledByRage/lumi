@@ -26,5 +26,5 @@ export class FindCustomersByQueryDto {
 
   @IsOptional()
   @IsString()
-  customerNumber?: string;
+  registrationNumber?: string;
 }

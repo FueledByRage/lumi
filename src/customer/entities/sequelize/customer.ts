@@ -9,7 +9,7 @@ export class CustomerModel implements Customer {
   @Column({
     unique: true,
   })
-  customerNumber: string;
+  registrationNumber: string;
 
   @Column()
   distributor: string;

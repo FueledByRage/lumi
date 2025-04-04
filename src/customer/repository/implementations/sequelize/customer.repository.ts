@@ -7,12 +7,12 @@ export interface FindCustomersByQueryRequest {
   year: number;
   name?: string;
   distributor?: string;
-  customerNumber?: string;
+  registrationNumber?: string;
 }
 
 export class CustomerRepositoryImpl extends Repository<CustomerWithInvoices> {
   async findByQuery(query: FindCustomersByQueryRequest) {
-    const { page, pageSize, year, distributor, customerNumber } = query;
+    const { page, pageSize, year, distributor, registrationNumber } = query;
 
     const offset = (page - 1) * pageSize;
 
@@ -30,9 +30,9 @@ export class CustomerRepositoryImpl extends Repository<CustomerWithInvoices> {
         distributor,
       });
     }
-    if (customerNumber) {
-      queryBuilder.andWhere('customer.customerNumber = :customerNumber', {
-        customerNumber,
+    if (registrationNumber) {
+      queryBuilder.andWhere('customer.registrationNumber = :registrationNumber', {
+        registrationNumber,
       });
     }
 
@@ -51,11 +51,11 @@ export class CustomerRepositoryImpl extends Repository<CustomerWithInvoices> {
   }
 
   async findByNumberAndDistributor(
-    customerNumber: string,
+    registrationNumber: string,
     distributor: string,
   ) {
     return this.findOne({
-      where: { customerNumber, distributor },
+      where: { registrationNumber, distributor },
     });
   }
 }

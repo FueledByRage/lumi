@@ -1,7 +1,7 @@
 import { Customer } from '../entities/customer.entity';
 
 export interface FindCustomerByNumberAndDistributorOrCreateUseCaseRequest {
-  customerNumber: string;
+  registrationNumber: string;
   distributor: string;
 }
 

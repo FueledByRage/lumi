@@ -1,7 +1,7 @@
 import { Customer } from '../entities/customer.entity';
 
 export interface SaveCustomerRequest {
-  customerNumber: string;
+  registrationNumber: string;
   name: string;
   email: string;
   distributor: string;

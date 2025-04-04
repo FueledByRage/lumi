@@ -18,7 +18,7 @@ export class SaveInvoiceUseCaseImpl implements SaveInvoiceUseCase {
   async execute(request: SaveInvoiceRequest): Promise<Invoice> {
     const customer =
       await this.findCustomerByNumberAndDistributorOrCreateUseCase.execute({
-        customerNumber: request.registrationNumber,
+        registrationNumber: request.registrationNumber,
         distributor: request.distributor,
       });
 

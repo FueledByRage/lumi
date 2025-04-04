@@ -16,16 +16,16 @@ export class FindCustomerByNumberAndDistributorOrCreateUseCaseImpl
   ) {}
 
   async execute({
-    customerNumber,
+    registrationNumber,
     distributor,
   }: FindCustomerByNumberAndDistributorOrCreateUseCaseRequest): Promise<Customer> {
     const customer =
       (await this.customerRepository.findByNumberAndDistributor(
-        customerNumber,
+        registrationNumber,
         distributor,
       )) ||
       this.customerRepository.save({
-        customerNumber,
+        registrationNumber,
         distributor,
       });
 

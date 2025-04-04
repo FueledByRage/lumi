@@ -2,7 +2,7 @@ import { Invoice } from 'src/invoice/entities/invoice.entity';
 
 export interface Customer {
   id: number;
-  customerNumber: string;
+  registrationNumber: string;
   distributor: string;
 }
 

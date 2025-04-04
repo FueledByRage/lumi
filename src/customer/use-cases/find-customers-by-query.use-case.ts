@@ -7,7 +7,7 @@ export interface FindCustomersByQueryRequest {
   year: number;
   name?: string;
   distributor?: string;
-  customerNumber?: string;
+  registrationNumber?: string;
 }
 
 export interface FindCustomersByQueryUseCase {

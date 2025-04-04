@@ -7,7 +7,7 @@ export interface CustomerRepository {
   findByQuery(query: FindCustomersByQueryRequest): Promise<Page<Customer>>;
   findById(id: number): Promise<Customer | null>;
   findByNumberAndDistributor(
-    customerNumber: string,
+    registrationNumber: string,
     distributor: string,
   ): Promise<Customer | null>;
 }
