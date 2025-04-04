@@ -1,5 +1,5 @@
 export interface ParsePdfRequest {
-  pdfUrl: string;
+  pdfKey: string;
 }
 
 export interface ParsePdfUseCase {

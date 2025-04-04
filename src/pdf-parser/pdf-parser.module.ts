@@ -1,18 +1,19 @@
 import { Module } from '@nestjs/common';
-import { ExtractFileDataUseCaseImpl } from './use-cases/implementations/parse-pdf-implementation.use-case';
+import { ParsePdfUseCaseImpl } from './use-cases/implementations/parse-pdf-implementation.use-case';
+import { FileModule } from 'src/file/file.module';
 
 @Module({
-  imports: [],
+  imports: [FileModule],
   providers: [
     {
       provide: 'ParsePdfUseCase',
-      useClass: ExtractFileDataUseCaseImpl,
+      useClass: ParsePdfUseCaseImpl,
     },
   ],
   exports: [
     {
       provide: 'ParsePdfUseCase',
-      useClass: ExtractFileDataUseCaseImpl,
+      useClass: ParsePdfUseCaseImpl,
     },
   ],
 })
