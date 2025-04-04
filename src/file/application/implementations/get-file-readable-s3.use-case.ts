@@ -1,32 +1,35 @@
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { Injectable } from '@nestjs/common';
+import { Readable } from 'stream';
 
 export interface GeneratePresignedUrlRequest {
-  key: string;
+  fileKey: string;
   contentType: string;
 }
 
-export interface GeneratePresignedUrlUseCase {
-  execute(params: GeneratePresignedUrlRequest): Promise<string>;
+export interface GetFileReadableUseCase {
+  execute(params: GeneratePresignedUrlRequest): Promise<Readable>;
 }
 
-export class GetFileReadableS3UseCaseImpl
-  implements GeneratePresignedUrlUseCase
-{
+@Injectable()
+export class GetFileReadableS3UseCaseImpl implements GetFileReadableUseCase {
   constructor(private readonly s3: S3Client) {}
 
-  async execute(params: GeneratePresignedUrlRequest): Promise<string> {
+  async execute(params: GeneratePresignedUrlRequest): Promise<Readable> {
     try {
+      console.log('params', params);
       const command = new GetObjectCommand({
-        Bucket: process.env.S3_BUCKET,
-        Key: params.key,
-        ResponseContentType: params.contentType,
+        Bucket: process.env.S3_BUCKET_NAME,
+        Key: params.fileKey,
       });
 
-      return await getSignedUrl(this.s3, command, { expiresIn: 3600 });
+      const response = await this.s3.send(command);
+
+      return response.Body as Readable;
     } catch (error) {
-      console.error('Erro ao gerar URL pré-assinada:', error);
-      throw new Error('Não foi possível gerar a URL pré-assinada');
+      console.error('Erro ao recuperar dados do arquivo:', error);
+
+      throw new Error('Falha ao recuperar o arquivo');
     }
   }
 }

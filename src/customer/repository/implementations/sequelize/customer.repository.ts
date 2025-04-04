@@ -1,4 +1,4 @@
-import { CustomerModel } from 'src/customer/entities/sequelize/customer';
+import { CustomerWithInvoices } from 'src/customer/entities/customer.entity';
 import { Repository } from 'typeorm';
 
 export interface FindCustomersByQueryRequest {
@@ -10,19 +10,21 @@ export interface FindCustomersByQueryRequest {
   customerNumber?: string;
 }
 
-export class CustomerRepositoryImpl extends Repository<CustomerModel> {
+export class CustomerRepositoryImpl extends Repository<CustomerWithInvoices> {
   async findByQuery(query: FindCustomersByQueryRequest) {
-    const { page, pageSize, year, name, distributor, customerNumber } = query;
+    const { page, pageSize, year, distributor, customerNumber } = query;
 
     const offset = (page - 1) * pageSize;
 
-    const queryBuilder = this.createQueryBuilder('customer')
-      .innerJoin('customer.invoices', 'invoice')
-      .where('EXTRACT(YEAR FROM invoice.referenceYear) = :year', { year });
+    const queryBuilder = this.createQueryBuilder('customer').where(
+      'EXISTS (' +
+        'SELECT 1 FROM invoices invoice ' +
+        'WHERE invoice.customerId = customer.id ' +
+        'AND invoice.referenceYear = :year' +
+        ')',
+      { year },
+    );
 
-    if (name) {
-      queryBuilder.andWhere('customer.name ILIKE :name', { name: `%${name}%` });
-    }
     if (distributor) {
       queryBuilder.andWhere('customer.distributor = :distributor', {
         distributor,
@@ -37,8 +39,7 @@ export class CustomerRepositoryImpl extends Repository<CustomerModel> {
     const total = await queryBuilder.getCount();
 
     const customers = await queryBuilder
-      .groupBy('customer.id')
-      .orderBy('customer.name', 'ASC')
+      .orderBy('customer.id', 'ASC')
       .skip(offset)
       .take(pageSize)
       .getMany();
@@ -47,5 +48,14 @@ export class CustomerRepositoryImpl extends Repository<CustomerModel> {
     const hasPreviousPage = page > 1;
 
     return { customers, total, hasNextPage, hasPreviousPage };
+  }
+
+  async findByNumberAndDistributor(
+    customerNumber: string,
+    distributor: string,
+  ) {
+    return this.findOne({
+      where: { customerNumber, distributor },
+    });
   }
 }

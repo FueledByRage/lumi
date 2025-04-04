@@ -13,7 +13,6 @@ export class UploadFileS3UseCaseImpl implements UploadFileUseCase {
 
   async execute({ file }: UploadFileRequest) {
     try {
-      console.log(file);
       const folder = process.env.S3_FOLDER || 'uploads';
       const extension = file.mimetype.split('/')[1];
       const baseKey = this.generateBaseKey(file.originalname, extension);
@@ -40,9 +39,7 @@ export class UploadFileS3UseCaseImpl implements UploadFileUseCase {
   }
 
   private generateBaseKey(fileName: string, extension: string): string {
-    const convertedFileName = Buffer.from(fileName, 'latin1').toString(
-      'utf8',
-    );
+    const convertedFileName = Buffer.from(fileName, 'latin1').toString('utf8');
     return `${convertedFileName}-${new Date().getTime()}.${extension}`;
   }
 

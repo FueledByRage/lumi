@@ -1,4 +1,3 @@
-import { InvoiceModel } from 'src/invoice/entities/sequelize/invoice.model';
 import { Customer } from '../customer.entity';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -13,11 +12,5 @@ export class CustomerModel implements Customer {
   customerNumber: string;
 
   @Column()
-  name: string;
-
-  @Column()
   distributor: string;
-
-  @Column()
-  invoices: InvoiceModel[];
 }
