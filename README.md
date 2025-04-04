@@ -1,4 +1,3 @@
-Claro! Aqui está o conteúdo formatado em Markdown com um diagrama simples para que você possa colocar direto no seu `README.md`:
 
 ---
 
