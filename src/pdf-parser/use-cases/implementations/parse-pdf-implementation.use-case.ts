@@ -26,7 +26,7 @@ export class ParsePdfUseCaseImpl implements ParsePdfUseCase {
 
       const pdfData = await pdfParse(pdfBuffer);
 
-      return JSON.parse(JSON.stringify(pdfData.text));
+      return pdfData.text;
     } catch (error) {
       console.error('Erro ao extrair dados do PDF:', error);
       throw new Error('Falha ao processar o arquivo');

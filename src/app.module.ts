@@ -9,6 +9,8 @@ import { bullConfig } from './configuration/bullmq.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FileModule } from './file/file.module';
 import { ConfigModule } from '@nestjs/config';
+import { InvoiceModel } from './invoice/entities/sequelize/invoice.model';
+import { CustomerModel } from './customer/entities/sequelize/customer';
 
 @Module({
   imports: [
@@ -20,7 +22,7 @@ import { ConfigModule } from '@nestjs/config';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: ['dist/**/*.entity{.ts,.js}'],
+      entities: [InvoiceModel, CustomerModel],
       synchronize: true,
     }),
     CustomerModule,

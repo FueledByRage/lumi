@@ -4,9 +4,10 @@ import {
   SaveInvoiceUseCase,
 } from '../save-invoice.use-case';
 import { Invoice } from 'src/invoice/entities/invoice.entity';
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { FindCustomerByNumberAndDistributorOrCreateUseCase } from 'src/customer/use-cases/find-by-number-and-distributor-or-create.use-case';
 
+@Injectable()
 export class SaveInvoiceUseCaseImpl implements SaveInvoiceUseCase {
   constructor(
     @Inject('InvoiceRepository')

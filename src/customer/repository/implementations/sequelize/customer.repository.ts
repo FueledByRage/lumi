@@ -1,4 +1,4 @@
-import { CustomerWithInvoices } from 'src/customer/entities/customer.entity';
+import { CustomerModel } from 'src/customer/entities/sequelize/customer';
 import { Repository } from 'typeorm';
 
 export interface FindCustomersByQueryRequest {
@@ -10,7 +10,7 @@ export interface FindCustomersByQueryRequest {
   registrationNumber?: string;
 }
 
-export class CustomerRepositoryImpl extends Repository<CustomerWithInvoices> {
+export class CustomerRepositoryImpl extends Repository<CustomerModel> {
   async findByQuery(query: FindCustomersByQueryRequest) {
     const { page, pageSize, year, distributor, registrationNumber } = query;
 
@@ -31,9 +31,12 @@ export class CustomerRepositoryImpl extends Repository<CustomerWithInvoices> {
       });
     }
     if (registrationNumber) {
-      queryBuilder.andWhere('customer.registrationNumber = :registrationNumber', {
-        registrationNumber,
-      });
+      queryBuilder.andWhere(
+        'customer.registrationNumber = :registrationNumber',
+        {
+          registrationNumber,
+        },
+      );
     }
 
     const total = await queryBuilder.getCount();

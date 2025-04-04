@@ -28,7 +28,6 @@ export class FindCustomerByNumberAndDistributorOrCreateUseCaseImpl
         registrationNumber,
         distributor,
       });
-
     return customer;
   }
 }

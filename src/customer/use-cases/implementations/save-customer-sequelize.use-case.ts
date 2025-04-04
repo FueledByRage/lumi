@@ -4,9 +4,14 @@ import {
   SaveCustomerUseCase,
 } from '../save-customer.use-case';
 import { CustomerRepository } from 'src/customer/repository/customer.repository';
+import { Inject, Injectable } from '@nestjs/common';
 
+@Injectable()
 export class SaveCustomerUseCaseImpl implements SaveCustomerUseCase {
-  constructor(private readonly customerRepository: CustomerRepository) {}
+  constructor(
+    @Inject('CustomerRepository')
+    private readonly customerRepository: CustomerRepository,
+  ) {}
 
   async execute(request: SaveCustomerRequest): Promise<Customer> {
     return await this.customerRepository.save(request);

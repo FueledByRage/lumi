@@ -25,6 +25,10 @@ import { FindCustomerByNumberAndDistributorOrCreateUseCaseImpl } from './use-cas
       provide: 'FindCustomerByNumberAndDistributorOrCreateUseCase',
       useClass: FindCustomerByNumberAndDistributorOrCreateUseCaseImpl,
     },
+    {
+      provide: 'CustomerRepository',
+      useClass: CustomerRepositoryImpl,
+    },
   ],
   exports: [
     {

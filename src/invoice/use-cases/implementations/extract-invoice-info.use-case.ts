@@ -9,27 +9,44 @@ export class ExtractInvoiceDataUseCaseImpl
   implements ExtractInvoiceDataUseCase
 {
   execute(text: string): ExtractedInvoiceData {
+    console.log(text);
+
     const registrationNumber = this.extractString(
       text,
-      /Número de Registro:\s*(\d+)/,
+      /Nº DO CLIENTE\s+(\d+)/,
     );
-    const date = this.extractString(text, /Data:\s*(\d{2}\/\d{2}\/\d{4})/);
-    const referenceMonth = this.extractString(text, /Mês:\s*(\d{1,2})/);
-    const referenceYear = this.extractString(text, /Ano:\s*(\d{4})/);
+
+    const date = this.extractString(
+      text,
+      /((JAN|FEV|MAR|ABR|MAI|JUN|JUL|AGO|SET|OUT|NOV|DEZ)\/\d{4})/i,
+    );
+
+    const referenceMonth = this.extractString(
+      text,
+      /((JAN|FEV|MAR|ABR|MAI|JUN|JUL|AGO|SET|OUT|NOV|DEZ)\/\d{4})/i,
+    ).split('/')[0];
+    const referenceYear = this.extractString(
+      text,
+      /((JAN|FEV|MAR|ABR|MAI|JUN|JUL|AGO|SET|OUT|NOV|DEZ)\/\d{4})/i,
+    ).split('/')[1];
+
     const distributor = this.extractDistributor(text);
 
     const electricity = this.extractEnergyInfo(
       text,
-      /Energia Elétrica.*?kWh\s+(\d+)\s+[\d,.]+\s+([\d,.]+)/,
+      /Energia Elétrica\s*kWh\s+(\d+)\s+[\d,.]+\s+([\d,.]+)/,
     );
+
     const sceee = this.extractEnergyInfo(
       text,
-      /Energia SCEE s\/ ICMS.*?kWh\s+(\d+)\s+[\d,.]+\s+([\d,.]+)/,
+      /Energia SCEE s\/ ICMS\s*kWh\s+(\d[\d.]*)\s+[\d,.]+\s+([\d,.]+)/,
     );
+
     const compensated = this.extractEnergyInfo(
       text,
-      /Energia compensada GD I.*?kWh\s+(\d+)\s+[\d,.]+\s+([\d,.]+)/,
+      /Energia compensada GD I\s*kWh\s+(\d[\d.]*)\s+[\d,.]+\s+(-[\d,.]+)/,
     );
+
     const publicLighting = this.extractNumber(
       text,
       /Contrib Ilum Publica Municipal\s+([\d,.]+)/,
