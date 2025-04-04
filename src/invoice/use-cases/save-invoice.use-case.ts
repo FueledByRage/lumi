@@ -1,4 +1,3 @@
-import { Customer } from 'src/customer/entities/customer.entity';
 import { Invoice } from '../entities/invoice.entity';
 
 export interface SaveInvoiceRequest {
@@ -11,9 +10,8 @@ export interface SaveInvoiceRequest {
   compensatedEnergyKWh: number;
   compensatedEnergyCost: number;
   publicLightingContributionKWh: number;
-  customerId: number;
-  url: string;
-  customer: Customer;
+  registrationNumber: string;
+  distributor: string;
 }
 
 export interface SaveInvoiceUseCase {

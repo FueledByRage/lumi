@@ -4,11 +4,27 @@ import {
   SaveInvoiceUseCase,
 } from '../save-invoice.use-case';
 import { Invoice } from 'src/invoice/entities/invoice.entity';
+import { Inject } from '@nestjs/common';
+import { FindCustomerByNumberAndDistributorOrCreateUseCase } from 'src/customer/use-cases/find-by-number-and-distributor-or-create.use-case';
 
 export class SaveInvoiceUseCaseImpl implements SaveInvoiceUseCase {
-  constructor(private readonly invoiceRepository: InvoiceRepository) {}
+  constructor(
+    @Inject('InvoiceRepository')
+    private readonly invoiceRepository: InvoiceRepository,
+    @Inject('FindCustomerByNumberAndDistributorOrCreateUseCase')
+    private readonly findCustomerByNumberAndDistributorOrCreateUseCase: FindCustomerByNumberAndDistributorOrCreateUseCase,
+  ) {}
 
   async execute(request: SaveInvoiceRequest): Promise<Invoice> {
-    return await this.invoiceRepository.save(request);
+    const customer =
+      await this.findCustomerByNumberAndDistributorOrCreateUseCase.execute({
+        customerNumber: request.registrationNumber,
+        distributor: request.distributor,
+      });
+
+    return await this.invoiceRepository.save({
+      ...request,
+      customer,
+    });
   }
 }

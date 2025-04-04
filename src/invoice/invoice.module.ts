@@ -6,6 +6,9 @@ import { PdfParserModule } from 'src/pdf-parser/pdf-parser.module';
 import { HandleInvoiceUploadUseCaseImpl } from './use-cases/implementations/handle-invoice-upload.use-case';
 import { InvoiceController } from './invoice.controller';
 import { FileModule } from 'src/file/file.module';
+import { ExtractInvoiceDataUseCaseImpl } from './use-cases/implementations/extract-invoice-info.use-case';
+import { CustomerModule } from 'src/customer/customer.module';
+import { InvoiceRepositoryImpl } from './repository/implementations/invoice-repository-sequelize';
 
 @Module({
   imports: [
@@ -14,6 +17,7 @@ import { FileModule } from 'src/file/file.module';
     }),
     PdfParserModule,
     FileModule,
+    CustomerModule,
   ],
   controllers: [InvoiceController],
   providers: [
@@ -29,6 +33,14 @@ import { FileModule } from 'src/file/file.module';
       provide: 'HandleInvoiceUploadUseCase',
       useClass: HandleInvoiceUploadUseCaseImpl,
     },
+    {
+      provide: 'ExtractInvoiceDataUseCase',
+      useClass: ExtractInvoiceDataUseCaseImpl,
+    },
+    {
+      provide: 'InvoiceRepository',
+      useClass: InvoiceRepositoryImpl,
+    },
   ],
   exports: [
     {
@@ -42,6 +54,10 @@ import { FileModule } from 'src/file/file.module';
     {
       provide: 'HandleInvoiceUploadUseCase',
       useClass: HandleInvoiceUploadUseCaseImpl,
+    },
+    {
+      provide: 'ExtractInvoiceDataUseCase',
+      useClass: ExtractInvoiceDataUseCaseImpl,
     },
   ],
 })

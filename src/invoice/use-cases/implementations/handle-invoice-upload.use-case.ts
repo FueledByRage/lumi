@@ -12,7 +12,7 @@ export class HandleInvoiceUploadUseCaseImpl
 {
   constructor(@InjectQueue('invoice') private readonly invoiceQueue: Queue) {}
 
-  async execute({ fileUrl }: HandleInvoiceUploadRequest): Promise<void> {
-    await this.invoiceQueue.add('read-invoice', { fileUrl });
+  async execute({ key }: HandleInvoiceUploadRequest): Promise<void> {
+    await this.invoiceQueue.add('read-invoice', { key });
   }
 }

@@ -1,5 +1,5 @@
 export interface ReadInvoiceFileRequest {
-  fileUrl: string;
+  key: string;
 }
 
 export interface ReadInvoiceFileUseCase {

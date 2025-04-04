@@ -1,45 +1,54 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  JoinColumn,
+  Unique,
+} from 'typeorm';
 import { Invoice } from '../invoice.entity';
 import { CustomerModel } from 'src/customer/entities/sequelize/customer';
 
-@Entity()
+@Entity('invoices')
+@Unique(['customer', 'referenceMonth', 'referenceYear'])
 export class InvoiceModel implements Invoice {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ type: 'varchar', length: 10, nullable: false })
   referenceMonth: string;
 
-  @Column()
+  @Column({ type: 'varchar', length: 4, nullable: false })
   referenceYear: string;
 
-  @Column()
+  @Column({ type: 'numeric', nullable: false })
   electricityConsumptionKWh: number;
 
-  @Column()
+  @Column({ type: 'numeric', nullable: false })
   electricityCost: number;
 
-  @Column()
+  @Column({ type: 'numeric', nullable: false })
   sceeeEnergyWithICMSKWh: number;
 
-  @Column()
+  @Column({ type: 'numeric', nullable: false })
   sceeeEnergyWithICMSCost: number;
 
-  @Column()
+  @Column({ type: 'numeric', nullable: false })
   compensatedEnergyKWh: number;
 
-  @Column()
+  @Column({ type: 'numeric', nullable: false })
   compensatedEnergyCost: number;
 
-  @Column()
+  @Column({ type: 'numeric', nullable: false })
   publicLightingContributionKWh: number;
 
-  @Column()
+  @Column({ type: 'text', nullable: false })
   url: string;
 
-  @ManyToOne(
-    () => CustomerModel,
-    (customer: CustomerModel) => customer.invoices,
-  )
+  @ManyToOne(() => CustomerModel, { nullable: false })
+  @JoinColumn({ name: 'customerId' })
   customer: CustomerModel;
+
+  @Column({ type: 'int', nullable: false })
+  customerId: number;
 }

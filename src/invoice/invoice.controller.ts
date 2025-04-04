@@ -10,7 +10,8 @@ import { UploadFileInterceptorImpl } from 'src/shared/infrastructure/interceptor
 import { FileInterceptor } from '@nestjs/platform-express/multer';
 
 export interface UploadedFile {
-  fileUrl: string;
+  url: string;
+  key: string;
 }
 
 @Controller('invoices')

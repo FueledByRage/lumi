@@ -1,5 +1,6 @@
 export interface HandleInvoiceUploadRequest {
-  fileUrl: string;
+  url: string;
+  key: string;
 }
 
 export interface HandleInvoiceUploadUseCase {

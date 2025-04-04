@@ -12,5 +12,4 @@ export interface Invoice {
   compensatedEnergyCost: number;
   publicLightingContributionKWh: number;
   customer: Customer;
-  url: string;
 }

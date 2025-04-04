@@ -7,9 +7,10 @@ import { SaveInvoiceUseCase } from '../save-invoice.use-case';
 import { Inject, Injectable } from '@nestjs/common';
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
+import { ExtractInvoiceDataUseCase } from '../extract-invoice-info.use-case';
 
 interface InvoiceJob {
-  fileKey: string;
+  key: string;
 }
 
 @Injectable()
@@ -23,19 +24,26 @@ export class ReadInvoiceFileUseCaseImplementation
     private readonly parseInvoiceUseCase: ParsePdfUseCase,
     @Inject('SaveInvoiceUseCase')
     private readonly saveInvoiceUseCase: SaveInvoiceUseCase,
+    @Inject('ExtractInvoiceDataUseCase')
+    private readonly extractInvoiceDataUseCase: ExtractInvoiceDataUseCase,
   ) {
     super();
   }
 
   async process(job: Job<InvoiceJob>) {
-    const { fileKey } = job.data;
-
-    await this.execute({ fileUrl: fileKey });
+    const { key } = job.data;
+    await this.execute({ key });
   }
 
-  async execute({ fileUrl }: ReadInvoiceFileRequest): Promise<void> {
-    const pdfData = await this.parseInvoiceUseCase.execute({ pdfUrl: fileUrl });
+  async execute({ key }: ReadInvoiceFileRequest): Promise<void> {
+    const pdfData = (await this.parseInvoiceUseCase.execute({
+      pdfKey: key,
+    })) as string;
 
-    console.log(pdfData);
+    const invoiceData = this.extractInvoiceDataUseCase.execute(pdfData);
+
+    await this.saveInvoiceUseCase.execute({
+      ...invoiceData,
+    });
   }
 }
