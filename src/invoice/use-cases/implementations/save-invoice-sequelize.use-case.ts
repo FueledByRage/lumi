@@ -10,7 +10,7 @@ import { FindCustomerByNumberAndDistributorOrCreateUseCase } from 'src/customer/
 @Injectable()
 export class SaveInvoiceUseCaseImpl implements SaveInvoiceUseCase {
   constructor(
-    @Inject('InvoiceRepository')
+    @Inject('InvoiceRepositoryImpl')
     private readonly invoiceRepository: InvoiceRepository,
     @Inject('FindCustomerByNumberAndDistributorOrCreateUseCase')
     private readonly findCustomerByNumberAndDistributorOrCreateUseCase: FindCustomerByNumberAndDistributorOrCreateUseCase,

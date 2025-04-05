@@ -17,7 +17,6 @@ export class GetFileReadableS3UseCaseImpl implements GetFileReadableUseCase {
 
   async execute(params: GeneratePresignedUrlRequest): Promise<Readable> {
     try {
-      console.log('params', params);
       const command = new GetObjectCommand({
         Bucket: process.env.S3_BUCKET_NAME,
         Key: params.fileKey,

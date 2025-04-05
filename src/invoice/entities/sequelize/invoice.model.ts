@@ -42,13 +42,7 @@ export class InvoiceModel implements Invoice {
   @Column({ type: 'numeric', nullable: false })
   publicLightingContributionKWh: number;
 
-  @Column({ type: 'text', nullable: false })
-  url: string;
-
   @ManyToOne(() => CustomerModel, { nullable: false })
   @JoinColumn({ name: 'customerId' })
   customer: CustomerModel;
-
-  @Column({ type: 'int', nullable: false })
-  customerId: number;
 }

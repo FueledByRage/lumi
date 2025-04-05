@@ -9,26 +9,24 @@ export class ExtractInvoiceDataUseCaseImpl
   implements ExtractInvoiceDataUseCase
 {
   execute(text: string): ExtractedInvoiceData {
-    console.log(text);
+    const clientNumberRegex = /Nº DO CLIENTE[^0-9]*([0-9]{10})/;
 
-    const registrationNumber = this.extractString(
-      text,
-      /Nº DO CLIENTE\s+(\d+)/,
-    );
+    const registrationNumber = this.extractString(text, clientNumberRegex);
 
     const date = this.extractString(
       text,
       /((JAN|FEV|MAR|ABR|MAI|JUN|JUL|AGO|SET|OUT|NOV|DEZ)\/\d{4})/i,
     );
 
-    const referenceMonth = this.extractString(
+    const referenceDate = this.extractString(
       text,
       /((JAN|FEV|MAR|ABR|MAI|JUN|JUL|AGO|SET|OUT|NOV|DEZ)\/\d{4})/i,
-    ).split('/')[0];
-    const referenceYear = this.extractString(
-      text,
-      /((JAN|FEV|MAR|ABR|MAI|JUN|JUL|AGO|SET|OUT|NOV|DEZ)\/\d{4})/i,
-    ).split('/')[1];
+    );
+
+    const referenceDateParts = referenceDate.split('/');
+
+    const referenceMonth = referenceDateParts[0];
+    const referenceYear = referenceDateParts[1];
 
     const distributor = this.extractDistributor(text);
 
@@ -88,9 +86,14 @@ export class ExtractInvoiceDataUseCaseImpl
     return match ? this.parseNumber(match[1]) : 0;
   }
 
-  private extractString(text: string, pattern: RegExp): string {
-    const match = text.match(pattern);
-    return match ? match[1] : '';
+  private extractString(text: string, ...regexes: RegExp[]): string {
+    for (const regex of regexes) {
+      const match = text.match(regex);
+      if (match && match[1]) {
+        return match[1].trim();
+      }
+    }
+    return '';
   }
 
   private parseNumber(value: string): number {

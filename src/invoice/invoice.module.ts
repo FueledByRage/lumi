@@ -9,6 +9,8 @@ import { FileModule } from 'src/file/file.module';
 import { ExtractInvoiceDataUseCaseImpl } from './use-cases/implementations/extract-invoice-info.use-case';
 import { CustomerModule } from 'src/customer/customer.module';
 import { InvoiceRepositoryImpl } from './repository/implementations/invoice-repository-sequelize';
+import { InvoiceModel } from './entities/sequelize/invoice.model';
+import { DataSource } from 'typeorm';
 
 @Module({
   imports: [
@@ -39,6 +41,12 @@ import { InvoiceRepositoryImpl } from './repository/implementations/invoice-repo
     },
     {
       provide: 'InvoiceRepository',
+      inject: ['DATA_SOURCE'],
+      useFactory: (dataSource: DataSource) =>
+        dataSource.getRepository(InvoiceModel),
+    },
+    {
+      provide: 'InvoiceRepositoryImpl',
       useClass: InvoiceRepositoryImpl,
     },
   ],

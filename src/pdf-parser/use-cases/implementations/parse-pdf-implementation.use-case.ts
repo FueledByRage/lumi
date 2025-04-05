@@ -13,7 +13,6 @@ export class ParsePdfUseCaseImpl implements ParsePdfUseCase {
 
   async execute({ pdfKey }: ParsePdfRequest) {
     try {
-      console.log('Chave do PDF:', pdfKey);
       const pdfReadable: Readable = await this.getReadableFile.execute({
         fileKey: pdfKey,
       });
