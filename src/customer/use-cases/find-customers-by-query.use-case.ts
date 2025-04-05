@@ -4,7 +4,7 @@ import { Page } from '../../shared/types/persistence.types';
 export interface FindCustomersByQueryRequest {
   page: number;
   pageSize: number;
-  year: number;
+  year: string;
   name?: string;
   distributor?: string;
   registrationNumber?: string;

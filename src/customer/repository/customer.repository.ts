@@ -5,7 +5,6 @@ import { FindCustomersByQueryRequest } from '../use-cases/find-customers-by-quer
 export interface CustomerRepository {
   save(customer: Omit<Customer, 'id'>): Promise<Customer>;
   findByQuery(query: FindCustomersByQueryRequest): Promise<Page<Customer>>;
-  findById(id: number): Promise<Customer | null>;
   findByNumberAndDistributor(
     registrationNumber: string,
     distributor: string,

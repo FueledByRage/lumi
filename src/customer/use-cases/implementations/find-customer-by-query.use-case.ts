@@ -6,11 +6,15 @@ import {
 
 import { Page } from 'src/shared/types/persistence.types';
 import { Customer } from 'src/customer/entities/customer.entity';
+import { Inject } from '@nestjs/common';
 
 export class FindCustomersByQueryUseCaseImpl
   implements FindCustomersByQueryUseCase
 {
-  constructor(private readonly customerRepository: CustomerRepository) {}
+  constructor(
+    @Inject('CustomerRepositoryImpl')
+    private readonly customerRepository: CustomerRepository,
+  ) {}
 
   async execute(request: FindCustomersByQueryRequest): Promise<Page<Customer>> {
     return this.customerRepository.findByQuery(request);

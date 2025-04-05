@@ -4,10 +4,13 @@ import { FindCustomersByQueryUseCaseImpl } from './use-cases/implementations/fin
 import { CustomerRepositoryImpl } from './repository/implementations/sequelize/customer.repository';
 import { SaveCustomerUseCaseImpl } from './use-cases/implementations/save-customer-sequelize.use-case';
 import { FindCustomerByNumberAndDistributorOrCreateUseCaseImpl } from './use-cases/implementations/find-by-number-and-distributor-or-create.use-case';
+import { DataSource } from 'typeorm';
+import { CustomerModel } from './entities/sequelize/customer';
+import { CustomerController } from './customer.controller';
 
 @Module({
   imports: [],
-  controllers: [],
+  controllers: [CustomerController],
   providers: [
     {
       provide: 'FindCustomersByQueryUseCase',
@@ -15,6 +18,12 @@ import { FindCustomerByNumberAndDistributorOrCreateUseCaseImpl } from './use-cas
     },
     {
       provide: 'CustomerRepository',
+      inject: ['DATA_SOURCE'],
+      useFactory: (dataSource: DataSource) =>
+        dataSource.getRepository(CustomerModel),
+    },
+    {
+      provide: 'CustomerRepositoryImpl',
       useClass: CustomerRepositoryImpl,
     },
     {
@@ -25,10 +34,6 @@ import { FindCustomerByNumberAndDistributorOrCreateUseCaseImpl } from './use-cas
       provide: 'FindCustomerByNumberAndDistributorOrCreateUseCase',
       useClass: FindCustomerByNumberAndDistributorOrCreateUseCaseImpl,
     },
-    {
-      provide: 'CustomerRepository',
-      useClass: CustomerRepositoryImpl,
-    },
   ],
   exports: [
     {
@@ -37,6 +42,12 @@ import { FindCustomerByNumberAndDistributorOrCreateUseCaseImpl } from './use-cas
     },
     {
       provide: 'CustomerRepository',
+      inject: ['DATA_SOURCE'],
+      useFactory: (dataSource: DataSource) =>
+        dataSource.getRepository(CustomerModel),
+    },
+    {
+      provide: 'CustomerRepositoryImpl',
       useClass: CustomerRepositoryImpl,
     },
     {

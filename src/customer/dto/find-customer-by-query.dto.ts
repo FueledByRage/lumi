@@ -12,13 +12,9 @@ export class FindCustomersByQueryDto {
   @Min(1)
   pageSize: number = 10;
 
-  @Type(() => Number)
+  @Type(() => String)
   @IsInt()
-  year: number;
-
-  @IsOptional()
-  @IsString()
-  name?: string;
+  year: string;
 
   @IsOptional()
   @IsString()
