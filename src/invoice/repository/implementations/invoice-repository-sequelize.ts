@@ -1,7 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InvoiceModel } from 'src/invoice/entities/sequelize/invoice.model';
 import { Repository } from 'typeorm';
-import { InvoiceRepository } from '../invoice.repository';
+import {
+  DashboardSummaryRequest,
+  InvoiceRepository,
+} from '../invoice.repository';
+import { DashboardInvoiceSummary } from 'src/invoice/dto/invoices-summary.dto';
 
 @Injectable()
 export class InvoiceRepositoryImpl implements InvoiceRepository {
@@ -12,12 +16,65 @@ export class InvoiceRepositoryImpl implements InvoiceRepository {
 
   async save(invoice: Omit<InvoiceModel, 'id'>) {
     const invoiceModel = this.invoiceRepository.create(invoice);
-    return this.invoiceRepository.save(invoiceModel);
+    return await this.invoiceRepository.save(invoiceModel);
   }
 
   async findById(id: number) {
-    return this.invoiceRepository.findOne({
+    return await this.invoiceRepository.findOne({
       where: { id },
     });
+  }
+  async getDashboardSummary({
+    customerId,
+    year,
+    month,
+  }: DashboardSummaryRequest): Promise<DashboardInvoiceSummary> {
+    const params = [customerId.toString()];
+    let query = `
+      SELECT
+        COALESCE(SUM("electricityConsumptionKWh" + "sceeeEnergyWithICMSKWh" + "compensatedEnergyKWh" + "publicLightingContributionKWh"), 0) AS "totalEnergy",
+        COALESCE(SUM("electricityCost" + "sceeeEnergyWithICMSCost" + "compensatedEnergyCost"), 0) AS "totalValue",
+        COALESCE(SUM("compensatedEnergyCost"), 0) AS "compensatedValue",
+        COUNT(*) AS "invoiceCount"
+      FROM "invoices"
+      WHERE "customerId" = $1
+    `;
+
+    if (year) {
+      params.push(year);
+      query += ` AND "referenceYear" = $${params.length}`;
+    }
+
+    if (month) {
+      params.push(month);
+      query += ` AND "referenceMonth" = $${params.length}`;
+    }
+
+    try {
+      const [result] = await this.invoiceRepository.query(query, params);
+
+      const totalEnergy = Number(result.totalEnergy);
+      const totalValue = Number(result.totalValue);
+      const compensatedValue = Number(result.compensatedValue);
+      const invoiceCount = Number(result.invoiceCount);
+      const averageCostPerKWh = totalEnergy > 0 ? totalValue / totalEnergy : 0;
+
+      return {
+        totalEnergy,
+        totalValue,
+        averageCostPerKWh,
+        invoiceCount,
+        compensatedValue,
+      };
+    } catch (error) {
+      console.error('Erro ao buscar resumo do dashboard:', error);
+      return {
+        totalEnergy: 0,
+        totalValue: 0,
+        averageCostPerKWh: 0,
+        invoiceCount: 0,
+        compensatedValue: 0,
+      };
+    }
   }
 }

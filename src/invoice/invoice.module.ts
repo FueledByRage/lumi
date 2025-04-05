@@ -11,6 +11,7 @@ import { CustomerModule } from 'src/customer/customer.module';
 import { InvoiceRepositoryImpl } from './repository/implementations/invoice-repository-sequelize';
 import { InvoiceModel } from './entities/sequelize/invoice.model';
 import { DataSource } from 'typeorm';
+import { FindDashboardSummaryUseCaseImpl } from './use-cases/implementations/find-dashboard-summary.use-case';
 
 @Module({
   imports: [
@@ -48,6 +49,10 @@ import { DataSource } from 'typeorm';
     {
       provide: 'InvoiceRepositoryImpl',
       useClass: InvoiceRepositoryImpl,
+    },
+    {
+      provide: 'FindDashboardSummaryUseCase',
+      useClass: FindDashboardSummaryUseCaseImpl,
     },
   ],
   exports: [
