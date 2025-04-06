@@ -112,7 +112,7 @@ export class InvoiceRepositoryImpl implements InvoiceRepository {
       const format = (arr: any[]) =>
         arr.map((item) => ({
           month: item.month,
-          value: Number(item.value),
+          value: (Number(item.value) * -1),
         }));
 
       return {

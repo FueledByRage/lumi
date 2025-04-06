@@ -8,7 +8,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 import { ExtractInvoiceDataUseCase } from '../extract-invoice-info.use-case';
-import { Queues } from 'src/shared/types/queues.types';
+import { Queues } from '../../../shared/types/queues.types';
 
 interface InvoiceJob {
   key: string;

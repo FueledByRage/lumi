@@ -5,7 +5,7 @@ import {
 } from '../handle-invoice-upload.use-case';
 import { Queue } from 'bullmq';
 import { InjectQueue } from '@nestjs/bullmq';
-import { Queues } from 'src/shared/types/queues.types';
+import { Queues } from '../../../shared/types/queues.types';
 
 @Injectable()
 export class HandleInvoiceUploadUseCaseImpl
