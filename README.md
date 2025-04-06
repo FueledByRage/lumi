@@ -1,4 +1,3 @@
-
 ---
 
 ## 📤 Fluxo de Upload de Faturas (Invoices)
@@ -47,13 +46,13 @@ graph TD
 
 ### ✅ Vantagens da Arquitetura
 
-| Vantagem                          | Descrição                                                                 |
-|----------------------------------|---------------------------------------------------------------------------|
-| ⚡ Escalabilidade                 | Jobs assíncronos processam múltiplos arquivos em paralelo.               |
-| 🔁 Resiliência                   | Falhas no processamento podem ser reprocessadas.                         |
-| 🚀 Performance                   | Parsing pesado não bloqueia a resposta HTTP.                             |
-| ✅ Consistência                   | Constraints evitam duplicidade de dados.                                 |
-| 🧩 Modularidade                   | Casos de uso isolados facilitam testes e manutenção.                     |
+| Vantagem            | Descrição                                                                  |
+|---------------------|----------------------------------------------------------------------------|
+| ⚡ Escalabilidade    | Jobs assíncronos processam múltiplos arquivos em paralelo.                |
+| 🔁 Resiliência       | Falhas no processamento podem ser reprocessadas.                          |
+| 🚀 Performance       | Parsing pesado não bloqueia a resposta HTTP.                              |
+| ✅ Consistência       | Constraints evitam duplicidade de dados.                                  |
+| 🧩 Modularidade       | Casos de uso isolados facilitam testes e manutenção.                      |
 
 ---
 
@@ -61,6 +60,13 @@ graph TD
 
 Este projeto utiliza o **Docker Compose** para facilitar a execução dos serviços de infraestrutura, como banco de dados PostgreSQL, Redis e uma interface visual para o banco (Adminer).
 
+### 💻 Requisitos
+
+- [Node.js 22.x](https://nodejs.org/)
+- [Yarn](https://yarnpkg.com/)
+- [Docker](https://www.docker.com/) e [Docker Compose](https://docs.docker.com/compose/)
+
+---
 
 ### ⚙️ 1. Configurar Variáveis de Ambiente
 
@@ -78,11 +84,11 @@ cp .env.sample .env
 
 ```env
 # Banco de Dados
-DB_HOST=database          # Nome do serviço Docker (não usar localhost)
-DB_PORT=5432              # Porta padrão do PostgreSQL
-DB_NAME=meu_banco         # Nome do banco de dados
-DB_USERNAME=usuario       # Usuário do banco
-DB_PASSWORD=senha         # Senha do banco
+DB_HOST=database
+DB_PORT=5432
+DB_NAME=meu_banco
+DB_USERNAME=usuario
+DB_PASSWORD=senha
 
 # AWS S3
 AWS_ACCESS_KEY=minha-chave
@@ -90,10 +96,11 @@ AWS_SECRET_KEY=minha-chave-secreta
 
 S3_BUCKET_NAME=nome-do-bucket
 S3_REGION=regiao
-S3_FOLDER=invoices        # Pasta onde os arquivos serão salvos
+S3_FOLDER=invoices
+FRONTEND_URL= # URL permitida por CORS
 ```
 
->  **Importante:** O valor de `DB_HOST` deve ser `database`, pois é o nome do serviço no `docker-compose.yml`.
+> **Importante:** O valor de `DB_HOST` deve ser `database`, pois é o nome do serviço no `docker-compose.yml`.
 
 ---
 
@@ -107,26 +114,48 @@ docker-compose up -d
 
 Isso irá subir os seguintes containers:
 
-| Serviço    | Descrição                            | Porta Local |
-|------------|--------------------------------------|-------------|
-| **PostgreSQL** | Banco de dados relacional           | 5432        |
-| **Redis**      | Armazenamento em memória para jobs | 6379        |
-| **Adminer**    | Interface web para o banco         | 8080        |
+| Serviço       | Descrição                            | Porta Local |
+|---------------|--------------------------------------|-------------|
+| **PostgreSQL** | Banco de dados relacional            | 5432        |
+| **Redis**      | Armazenamento em memória para jobs  | 6379        |
+| **Adminer**    | Interface web para o banco           | 8080        |
 
-Você poderá acessar o Adminer através do navegador:  
+Acesse o Adminer pelo navegador:  
 [http://localhost:8080](http://localhost:8080)
 
 ---
 
-### 3. Rodar a Aplicação
+### 🚀 3. Rodar a Aplicação
 
-Com os containers em execução, instale as dependências da aplicação e execute-a localmente (exemplo com Node.js/NestJS):
+Com os containers em execução, instale as dependências da aplicação e execute-a localmente:
 
 ```bash
-npm install
-npm run start:dev
+yarn install
+yarn start:dev
 ```
 
-A aplicação estará disponível em [http://localhost:3000](http://localhost:3000) (ou na porta configurada).
+A aplicação estará disponível em:  
+[http://localhost:3000](http://localhost:3000)
+
+---
+
+### 🧪 4. Rodar os Testes
+
+Este projeto possui testes automatizados organizados em duas categorias:
+
+- **Testes Unitários**
+- **Testes End-to-End (E2E)**
+
+#### Rodar Testes Unitários:
+
+```bash
+yarn test:unit
+```
+
+#### Rodar Testes End-to-End:
+
+```bash
+yarn test:e2e
+```
 
 ---
