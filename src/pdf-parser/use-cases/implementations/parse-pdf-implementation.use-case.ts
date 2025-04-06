@@ -2,10 +2,11 @@ import * as pdfParse from 'pdf-parse';
 import { ParsePdfRequest, ParsePdfUseCase } from '../parse-pdf.use-case';
 import { GetFileReadableUseCase } from 'src/file/application/get-file-readable.use-case';
 import { Readable } from 'stream';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 
 @Injectable()
 export class ParsePdfUseCaseImpl implements ParsePdfUseCase {
+  private readonly logger = new Logger();
   constructor(
     @Inject('GetFileReadableUseCase')
     private readonly getReadableFile: GetFileReadableUseCase,
@@ -18,6 +19,7 @@ export class ParsePdfUseCaseImpl implements ParsePdfUseCase {
       });
 
       const chunks: Buffer[] = [];
+
       for await (const chunk of pdfReadable) {
         chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
       }
@@ -27,7 +29,8 @@ export class ParsePdfUseCaseImpl implements ParsePdfUseCase {
 
       return pdfData.text;
     } catch (error) {
-      console.error('Erro ao extrair dados do PDF:', error);
+      this.logger.error('Error parsing PDF', error);
+
       throw new Error('Falha ao processar o arquivo');
     }
   }
