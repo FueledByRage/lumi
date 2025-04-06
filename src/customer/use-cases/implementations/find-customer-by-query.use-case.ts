@@ -12,7 +12,7 @@ export class FindCustomersByQueryUseCaseImpl
   implements FindCustomersByQueryUseCase
 {
   constructor(
-    @Inject('CustomerRepositoryImpl')
+    @Inject('CustomerRepository')
     private readonly customerRepository: CustomerRepository,
   ) {}
 

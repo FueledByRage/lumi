@@ -1,4 +1,4 @@
-import { CustomerModel } from 'src/customer/entities/sequelize/customer';
+import { CustomerModel } from 'src/customer/entities/typeorm/customer';
 import { Repository } from 'typeorm';
 import { CustomerRepository } from '../../customer.repository';
 import { Inject, Injectable } from '@nestjs/common';
@@ -10,7 +10,7 @@ import {
 @Injectable()
 export class CustomerRepositoryImpl implements CustomerRepository {
   constructor(
-    @Inject('CustomerRepository')
+    @Inject('CustomerRepositoryTypeOrm')
     private readonly customerRepository: Repository<CustomerModel>,
   ) {}
 

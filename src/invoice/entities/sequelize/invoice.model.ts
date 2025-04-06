@@ -7,7 +7,7 @@ import {
   Unique,
 } from 'typeorm';
 import { Invoice } from '../invoice.entity';
-import { CustomerModel } from 'src/customer/entities/sequelize/customer';
+import { CustomerModel } from 'src/customer/entities/typeorm/customer';
 
 @Entity('invoices')
 @Unique(['customer', 'referenceMonth', 'referenceYear'])

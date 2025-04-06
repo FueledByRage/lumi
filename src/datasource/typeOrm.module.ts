@@ -1,6 +1,6 @@
 import { DataSource } from 'typeorm';
 import { Global, Module } from '@nestjs/common';
-import { CustomerModel } from 'src/customer/entities/sequelize/customer';
+import { CustomerModel } from 'src/customer/entities/typeorm/customer';
 import { InvoiceModel } from 'src/invoice/entities/sequelize/invoice.model';
 
 const databaseProvider = [

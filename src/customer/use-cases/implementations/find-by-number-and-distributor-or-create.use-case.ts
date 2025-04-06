@@ -11,7 +11,7 @@ export class FindCustomerByNumberAndDistributorOrCreateUseCaseImpl
   implements FindCustomerByNumberAndDistributorOrCreateUseCase
 {
   constructor(
-    @Inject('CustomerRepositoryImpl')
+    @Inject('CustomerRepository')
     private readonly customerRepository: CustomerRepository,
   ) {}
 
@@ -20,21 +20,17 @@ export class FindCustomerByNumberAndDistributorOrCreateUseCaseImpl
     distributor,
     customerName,
   }: FindCustomerByNumberAndDistributorOrCreateUseCaseRequest): Promise<Customer> {
-    const customer = await this.customerRepository.findByNumberAndDistributor(
-      registrationNumber,
-      distributor,
-    );
+    const customer =
+      (await this.customerRepository.findByNumberAndDistributor(
+        registrationNumber,
+        distributor,
+      )) ||
+      (await this.customerRepository.save({
+        registrationNumber,
+        distributor,
+        name: customerName,
+      }));
 
-    if (customer) {
-      return customer;
-    }
-
-    const newCustomer = this.customerRepository.save({
-      registrationNumber,
-      distributor,
-      name: customerName,
-    });
-
-    return newCustomer;
+    return customer;
   }
 }

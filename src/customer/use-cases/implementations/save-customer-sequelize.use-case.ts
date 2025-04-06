@@ -9,7 +9,7 @@ import { Inject, Injectable } from '@nestjs/common';
 @Injectable()
 export class SaveCustomerUseCaseImpl implements SaveCustomerUseCase {
   constructor(
-    @Inject('CustomerRepositoryImpl')
+    @Inject('CustomerRepository')
     private readonly customerRepository: CustomerRepository,
   ) {}
 
