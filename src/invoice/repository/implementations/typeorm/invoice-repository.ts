@@ -1,9 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { InvoiceModel } from 'src/invoice/entities/typeorm/invoice.model';
 import { Repository } from 'typeorm';
-import {
- InvoiceRepository,
-} from '../../invoice.repository';
+import { InvoiceRepository } from '../../invoice.repository';
 import { DashboardInvoiceSummary } from 'src/invoice/dto/invoices-summary.dto';
 import { DashboardSummaryRequest } from '../../invoice-repository.types';
 

@@ -1,6 +1,6 @@
 import { Customer } from '../entities/customer.entity';
 import { Page } from '../../shared/types/persistence.types';
-import { FindCustomersByQueryRequest } from '../use-cases/find-customers-by-query.use-case';
+import { FindCustomersByQueryRequest } from './customer-repository.types';
 
 export interface CustomerRepository {
   save(customer: Omit<Customer, 'id'>): Promise<Customer>;

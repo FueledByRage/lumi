@@ -5,7 +5,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   FilterEnum,
   FindCustomersByQueryRequest,
-} from 'src/customer/use-cases/find-customers-by-query.use-case';
+} from '../../customer-repository.types';
 
 @Injectable()
 export class CustomerRepositoryImpl implements CustomerRepository {
