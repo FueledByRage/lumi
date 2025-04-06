@@ -32,6 +32,10 @@ export class FindCustomersByQueryDto {
   @IsString()
   registrationNumber?: string;
 
+  @IsOptional()
+  @IsString()
+  query?: string;
+
   @IsNotEmpty()
   @IsEnum(FilterEnum)
   type: FilterEnum;

@@ -1,6 +1,6 @@
 import * as pdfParse from 'pdf-parse';
 import { ParsePdfRequest, ParsePdfUseCase } from '../parse-pdf.use-case';
-import { GetFileReadableUseCase } from 'src/file/application/get-file-readable.use-case';
+import { GetFileReadableUseCase } from 'src/file/use-cases/get-file-readable.use-case';
 import { Readable } from 'stream';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 

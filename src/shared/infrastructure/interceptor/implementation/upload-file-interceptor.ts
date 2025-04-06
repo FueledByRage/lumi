@@ -1,4 +1,4 @@
-import { UploadFileUseCase } from 'src/file/application/upload-file.use-case';
+import { UploadFileUseCase } from 'src/file/use-cases/upload-file.use-case';
 import {
   UploadFileInterceptor,
   UploadFileRequest,

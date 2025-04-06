@@ -48,7 +48,7 @@ export class UploadFileS3UseCaseImpl implements UploadFileUseCase {
     return `${folder}/${key}`;
   }
 
-  async getPresignedUrl(
+  private async getPresignedUrl(
     key: string,
     expiresIn: number = 3600,
   ): Promise<string> {
