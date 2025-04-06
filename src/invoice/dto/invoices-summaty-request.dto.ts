@@ -10,7 +10,7 @@ export class DashboardSummaryRequestDto {
 
   @IsOptional()
   @IsString()
-  year?: string;
+  year: string;
 
   @IsOptional()
   @IsString()

@@ -12,6 +12,7 @@ import { InvoiceRepositoryImpl } from './repository/implementations/invoice-repo
 import { InvoiceModel } from './entities/sequelize/invoice.model';
 import { DataSource } from 'typeorm';
 import { FindDashboardSummaryUseCaseImpl } from './use-cases/implementations/find-dashboard-summary.use-case';
+import GetMonthlyDataUseCaseImpl from './use-cases/implementations/get-monthly-data.use-case';
 
 @Module({
   imports: [
@@ -53,6 +54,10 @@ import { FindDashboardSummaryUseCaseImpl } from './use-cases/implementations/fin
     {
       provide: 'FindDashboardSummaryUseCase',
       useClass: FindDashboardSummaryUseCaseImpl,
+    },
+    {
+      provide: 'GetMonthlyDataUseCase',
+      useClass: GetMonthlyDataUseCaseImpl,
     },
   ],
   exports: [

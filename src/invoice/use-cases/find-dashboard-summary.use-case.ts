@@ -1,6 +1,6 @@
 export interface FindDashboardSummaryRequest {
   customerId: number;
-  year?: string;
+  year: string;
   month?: string;
 }
 

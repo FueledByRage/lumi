@@ -12,6 +12,8 @@ import { UploadFileInterceptorImpl } from 'src/shared/infrastructure/interceptor
 import { FileInterceptor } from '@nestjs/platform-express/multer';
 import { FindDashboardSummaryUseCase } from './use-cases/find-dashboard-summary.use-case';
 import { DashboardSummaryRequestDto } from './dto/invoices-summaty-request.dto';
+import { GetMonthlyDataUseCase } from './use-cases/get-monthly-data.use-case';
+import { GetMonthlyDataRequest } from './dto/invoices-monthly-data-request.dto';
 
 export interface UploadedFile {
   url: string;
@@ -25,6 +27,8 @@ export class InvoiceController {
     private readonly handleInvoiceUploadRequest: HandleInvoiceUploadUseCase,
     @Inject('FindDashboardSummaryUseCase')
     private readonly findDashboardSummaryUseCase: FindDashboardSummaryUseCase,
+    @Inject('GetMonthlyDataUseCase')
+    private readonly getMonthlyDataUseCase: GetMonthlyDataUseCase,
   ) {}
 
   @Post('upload')
@@ -36,5 +40,10 @@ export class InvoiceController {
   @Get('dashboard-summary')
   async getDashboardSummary(@Query() query: DashboardSummaryRequestDto) {
     return await this.findDashboardSummaryUseCase.execute(query);
+  }
+
+  @Get('monthly-data')
+  async getMonthlyData(@Query() query: GetMonthlyDataRequest) {
+    return this.getMonthlyDataUseCase.execute(query);
   }
 }

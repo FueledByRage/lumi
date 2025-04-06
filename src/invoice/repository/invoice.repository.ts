@@ -3,13 +3,26 @@ import { Invoice } from '../entities/invoice.entity';
 
 export interface DashboardSummaryRequest {
   customerId: number;
-  year?: string;
+  year: string;
   month?: string;
 }
 
+export interface MonthlyData {
+  month: string;
+  value: number;
+}
+
+export interface GetMonthlyDataUseCaseResponse {
+  consumption: MonthlyData[];
+  compensation: MonthlyData[];
+}
 export interface InvoiceRepository {
   save(invoice: Omit<Invoice, 'id'>): Promise<Invoice>;
   getDashboardSummary(
     query: DashboardSummaryRequest,
   ): Promise<DashboardInvoiceSummary>;
+  getMonthlyData(
+    customerId: number,
+    year: number,
+  ): Promise<GetMonthlyDataUseCaseResponse>;
 }

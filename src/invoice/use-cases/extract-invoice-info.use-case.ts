@@ -5,6 +5,7 @@ export type EnergyInfo = {
 
 export type ExtractedInvoiceData = {
   registrationNumber: string;
+  customerName: string;
   date: string;
   referenceMonth: string;
   referenceYear: string;

@@ -77,4 +77,40 @@ export class InvoiceRepositoryImpl implements InvoiceRepository {
       };
     }
   }
+
+  async getMonthlyData(customerId: number, year: number) {
+    const params = [customerId, year];
+
+    const consumptionQuery = `
+      SELECT "referenceMonth" AS month, SUM("electricityConsumptionKWh") AS value
+      FROM "invoices"
+      WHERE "customerId" = $1 AND "referenceYear" = $2
+      GROUP BY "referenceMonth"
+      ORDER BY "referenceMonth"
+    `;
+
+    const compensationQuery = `
+      SELECT "referenceMonth" AS month, SUM("compensatedEnergyCost") AS value
+      FROM "invoices"
+      WHERE "customerId" = $1 AND "referenceYear" = $2
+      GROUP BY "referenceMonth"
+      ORDER BY "referenceMonth"
+    `;
+
+    const [consumptionData, compensationData] = await Promise.all([
+      this.invoiceRepository.query(consumptionQuery, params),
+      this.invoiceRepository.query(compensationQuery, params),
+    ]);
+
+    const format = (arr: any[]) =>
+      arr.map((item) => ({
+        month: item.month,
+        value: Number(item.value),
+      }));
+
+    return {
+      consumption: format(consumptionData),
+      compensation: format(compensationData),
+    };
+  }
 }
