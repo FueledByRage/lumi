@@ -8,16 +8,17 @@ import { InvoiceController } from './invoice.controller';
 import { FileModule } from 'src/file/file.module';
 import { ExtractInvoiceDataUseCaseImpl } from './use-cases/implementations/extract-invoice-info.use-case';
 import { CustomerModule } from 'src/customer/customer.module';
-import { InvoiceRepositoryImpl } from './repository/implementations/invoice-repository-sequelize';
-import { InvoiceModel } from './entities/sequelize/invoice.model';
+import { InvoiceRepositoryImpl } from './repository/implementations/typeorm/invoice-repository';
+import { InvoiceModel } from './entities/typeorm/invoice.model';
 import { DataSource } from 'typeorm';
 import { FindDashboardSummaryUseCaseImpl } from './use-cases/implementations/find-dashboard-summary.use-case';
 import GetMonthlyDataUseCaseImpl from './use-cases/implementations/get-monthly-data.use-case';
+import { Queues } from 'src/shared/types/queues.types';
 
 @Module({
   imports: [
     BullModule.registerQueue({
-      name: 'invoice',
+      name: Queues.INVOICE,
     }),
     PdfParserModule,
     FileModule,
@@ -42,13 +43,13 @@ import GetMonthlyDataUseCaseImpl from './use-cases/implementations/get-monthly-d
       useClass: ExtractInvoiceDataUseCaseImpl,
     },
     {
-      provide: 'InvoiceRepository',
+      provide: 'InvoiceRepositoryTypeOrm',
       inject: ['DATA_SOURCE'],
       useFactory: (dataSource: DataSource) =>
         dataSource.getRepository(InvoiceModel),
     },
     {
-      provide: 'InvoiceRepositoryImpl',
+      provide: 'InvoiceRepository',
       useClass: InvoiceRepositoryImpl,
     },
     {

@@ -1,21 +1,10 @@
-import { DashboardInvoiceSummary } from '../dto/invoices-summary.dto';
 import { Invoice } from '../entities/invoice.entity';
+import {
+  DashboardInvoiceSummary,
+  DashboardSummaryRequest,
+  GetMonthlyDataUseCaseResponse,
+} from './invoice-repository.types';
 
-export interface DashboardSummaryRequest {
-  customerId: number;
-  year: string;
-  month?: string;
-}
-
-export interface MonthlyData {
-  month: string;
-  value: number;
-}
-
-export interface GetMonthlyDataUseCaseResponse {
-  consumption: MonthlyData[];
-  compensation: MonthlyData[];
-}
 export interface InvoiceRepository {
   save(invoice: Omit<Invoice, 'id'>): Promise<Invoice>;
   getDashboardSummary(

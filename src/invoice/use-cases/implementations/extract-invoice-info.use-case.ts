@@ -107,7 +107,7 @@ export class ExtractInvoiceDataUseCaseImpl
     const matches = text.match(regex);
 
     if (matches && matches.length >= 2) {
-      return matches[1]; // o segundo número
+      return matches[1];
     }
 
     return '';

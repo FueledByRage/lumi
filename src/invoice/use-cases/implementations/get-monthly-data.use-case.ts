@@ -11,7 +11,7 @@ export default class GetMonthlyDataUseCaseImpl
   implements GetMonthlyDataUseCase
 {
   constructor(
-    @Inject('InvoiceRepositoryImpl')
+    @Inject('InvoiceRepository')
     private readonly invoiceRepository: InvoiceRepository,
   ) {}
 

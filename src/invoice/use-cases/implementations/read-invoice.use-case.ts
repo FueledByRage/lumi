@@ -4,21 +4,23 @@ import {
   ReadInvoiceFileUseCase,
 } from '../read-invoice.use-case';
 import { SaveInvoiceUseCase } from '../save-invoice.use-case';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 import { ExtractInvoiceDataUseCase } from '../extract-invoice-info.use-case';
+import { Queues } from 'src/shared/types/queues.types';
 
 interface InvoiceJob {
   key: string;
 }
 
 @Injectable()
-@Processor('invoice')
+@Processor(Queues.INVOICE)
 export class ReadInvoiceFileUseCaseImplementation
   extends WorkerHost
   implements ReadInvoiceFileUseCase
 {
+  private readonly logger = new Logger();
   constructor(
     @Inject('ParsePdfUseCase')
     private readonly parseInvoiceUseCase: ParsePdfUseCase,
@@ -36,9 +38,15 @@ export class ReadInvoiceFileUseCaseImplementation
   }
 
   async execute({ key }: ReadInvoiceFileRequest): Promise<void> {
-    const pdfData = (await this.parseInvoiceUseCase.execute({
+    const pdfData = await this.parseInvoiceUseCase.execute({
       pdfKey: key,
-    })) as string;
+    });
+
+    if (pdfData === '') {
+      this.logger.warn('Error parsing PDF data');
+
+      return;
+    }
 
     const invoiceData = this.extractInvoiceDataUseCase.execute(pdfData);
 

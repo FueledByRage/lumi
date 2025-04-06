@@ -3,5 +3,5 @@ export interface ParsePdfRequest {
 }
 
 export interface ParsePdfUseCase {
-  execute(request: ParsePdfRequest);
+  execute(request: ParsePdfRequest): Promise<string>;
 }

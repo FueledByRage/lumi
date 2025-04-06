@@ -1,4 +1,4 @@
-import { InvoiceModel } from 'src/invoice/entities/sequelize/invoice.model';
+import { InvoiceModel } from 'src/invoice/entities/typeorm/invoice.model';
 import { Customer } from '../customer.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 

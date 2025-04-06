@@ -11,7 +11,7 @@ export class FindDashboardSummaryUseCaseImpl
   implements FindDashboardSummaryUseCase
 {
   constructor(
-    @Inject('InvoiceRepositoryImpl')
+    @Inject('InvoiceRepository')
     private readonly invoiceRepository: InvoiceRepository,
   ) {}
 

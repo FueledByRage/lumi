@@ -1,22 +1,28 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { InvoiceModel } from 'src/invoice/entities/sequelize/invoice.model';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { InvoiceModel } from 'src/invoice/entities/typeorm/invoice.model';
 import { Repository } from 'typeorm';
 import {
-  DashboardSummaryRequest,
-  InvoiceRepository,
-} from '../invoice.repository';
+ InvoiceRepository,
+} from '../../invoice.repository';
 import { DashboardInvoiceSummary } from 'src/invoice/dto/invoices-summary.dto';
+import { DashboardSummaryRequest } from '../../invoice-repository.types';
 
 @Injectable()
 export class InvoiceRepositoryImpl implements InvoiceRepository {
+  private readonly logger = new Logger();
   constructor(
-    @Inject('InvoiceRepository')
+    @Inject('InvoiceRepositoryTypeOrm')
     private readonly invoiceRepository: Repository<InvoiceModel>,
   ) {}
 
   async save(invoice: Omit<InvoiceModel, 'id'>) {
-    const invoiceModel = this.invoiceRepository.create(invoice);
-    return await this.invoiceRepository.save(invoiceModel);
+    try {
+      const invoiceModel = this.invoiceRepository.create(invoice);
+      return await this.invoiceRepository.save(invoiceModel);
+    } catch (error) {
+      this.logger.error('Error saving invoice', error);
+      throw new Error('Error saving invoice');
+    }
   }
 
   async findById(id: number) {
@@ -24,6 +30,7 @@ export class InvoiceRepositoryImpl implements InvoiceRepository {
       where: { id },
     });
   }
+
   async getDashboardSummary({
     customerId,
     year,
@@ -67,7 +74,8 @@ export class InvoiceRepositoryImpl implements InvoiceRepository {
         compensatedValue,
       };
     } catch (error) {
-      console.error('Erro ao buscar resumo do dashboard:', error);
+      this.logger.error('Error fetching dashboard summary', error);
+
       return {
         totalEnergy: 0,
         totalValue: 0,
@@ -97,20 +105,25 @@ export class InvoiceRepositoryImpl implements InvoiceRepository {
       ORDER BY "referenceMonth"
     `;
 
-    const [consumptionData, compensationData] = await Promise.all([
-      this.invoiceRepository.query(consumptionQuery, params),
-      this.invoiceRepository.query(compensationQuery, params),
-    ]);
+    try {
+      const [consumptionData, compensationData] = await Promise.all([
+        this.invoiceRepository.query(consumptionQuery, params),
+        this.invoiceRepository.query(compensationQuery, params),
+      ]);
 
-    const format = (arr: any[]) =>
-      arr.map((item) => ({
-        month: item.month,
-        value: Number(item.value),
-      }));
+      const format = (arr: any[]) =>
+        arr.map((item) => ({
+          month: item.month,
+          value: Number(item.value),
+        }));
 
-    return {
-      consumption: format(consumptionData),
-      compensation: format(compensationData),
-    };
+      return {
+        consumption: format(consumptionData),
+        compensation: format(compensationData),
+      };
+    } catch (error) {
+      this.logger.error('Error fetching monthly data', error);
+      throw new Error('Error fetching monthly data');
+    }
   }
 }
