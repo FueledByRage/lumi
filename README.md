@@ -157,4 +157,22 @@ yarn test:unit
 yarn test:e2e
 ```
 
+## 🚦 Integração Contínua (CI)
+
+Este projeto utiliza **GitHub Actions** para garantir a qualidade do código na branch `master`.
+
+### 🔄 Workflow: Push to Master
+
+Sempre que um novo push é feito na branch `master`, dois jobs são executados automaticamente:
+
+| Job         | Descrição                                                                 |
+|-------------|---------------------------------------------------------------------------|
+| ✅ `unit-test` | Instala as dependências e executa os **testes unitários** com `yarn test:unit` |
+| 🔧 `build`     | Compila a aplicação usando `yarn build` para garantir que o projeto esteja buildável |
+
+### 🛠️ Arquivo de Configuração `.github/workflows/ci.yml`
+
+> Isso ajuda a manter a estabilidade do projeto e detectar problemas logo após alterações na branch principal.
+
+
 ---
