@@ -12,6 +12,7 @@ export interface SaveInvoiceRequest {
   publicLightingContributionKWh: number;
   registrationNumber: string;
   distributor: string;
+  customerName: string;
 }
 
 export interface SaveInvoiceUseCase {

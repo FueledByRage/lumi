@@ -9,9 +9,10 @@ export class ExtractInvoiceDataUseCaseImpl
   implements ExtractInvoiceDataUseCase
 {
   execute(text: string): ExtractedInvoiceData {
-    const clientNumberRegex = /Nº DO CLIENTE[^0-9]*([0-9]{10})/;
+    const registrationNumber = this.extractInstallationNumber(text);
 
-    const registrationNumber = this.extractString(text, clientNumberRegex);
+    const customerNameRegex = /DÉBITO AUTOMÁTICO\s+([^\n]+)/;
+    const customerName = this.extractString(text, customerNameRegex);
 
     const date = this.extractString(
       text,
@@ -60,6 +61,7 @@ export class ExtractInvoiceDataUseCaseImpl
       sceee,
       compensated,
       publicLighting,
+      customerName,
     });
   }
 
@@ -100,6 +102,17 @@ export class ExtractInvoiceDataUseCaseImpl
     return parseFloat(value.replace(',', '.')) || 0;
   }
 
+  private extractInstallationNumber(text: string): string {
+    const regex = /\b\d{10}\b/g;
+    const matches = text.match(regex);
+  
+    if (matches && matches.length >= 2) {
+      return matches[1]; // o segundo número
+    }
+
+    return '';
+  }
+
   private buildExtractedData(data: {
     registrationNumber: string;
     date: string;
@@ -110,9 +123,11 @@ export class ExtractInvoiceDataUseCaseImpl
     sceee: { quantity: number; value: number };
     compensated: { quantity: number; value: number };
     publicLighting: number;
+    customerName: string;
   }): ExtractedInvoiceData {
     return {
       registrationNumber: data.registrationNumber,
+      customerName: data.customerName,
       date: data.date,
       referenceMonth: data.referenceMonth,
       referenceYear: data.referenceYear,

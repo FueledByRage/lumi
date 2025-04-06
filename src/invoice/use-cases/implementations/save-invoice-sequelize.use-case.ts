@@ -21,6 +21,7 @@ export class SaveInvoiceUseCaseImpl implements SaveInvoiceUseCase {
       await this.findCustomerByNumberAndDistributorOrCreateUseCase.execute({
         registrationNumber: request.registrationNumber,
         distributor: request.distributor,
+        customerName: request.customerName,
       });
 
     return await this.invoiceRepository.save({
