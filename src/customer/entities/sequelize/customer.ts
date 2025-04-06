@@ -15,6 +15,13 @@ export class CustomerModel implements Customer {
   @Column()
   distributor: string;
 
+  @Column({
+    type: 'varchar',
+    length: 255,
+    nullable: true,
+  })
+  name: string;
+
   @OneToMany(() => InvoiceModel, (invoice) => invoice.customer)
   invoices: InvoiceModel[];
 }
