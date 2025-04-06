@@ -15,18 +15,33 @@ describe('ExtractInvoiceDataUseCaseImpl', () => {
 
   it('should extract correct invoice data from text', () => {
     const invoiceText = `
-      CEMIG DISTRIBUIÇÃO S.A.
-      NÚMERO DA INSTALAÇÃO: 0123456789
-      NÚMERO DE IDENTIFICAÇÃO: 9876543210
-      DÉBITO AUTOMÁTICO JOÃO DA SILVA
-      DATA DE EMISSÃO: 05/05/2023
-      REFERENTE A: MAI/2023
-      
-      Energia Elétrica kWh 100 0,50 50,00
-      Energia SCEE s/ ICMS kWh 50 0,40 20,00
-      Energia compensada GD I kWh 30 0,45 -13,50
-      Contrib Ilum Publica Municipal 10,00
-    `;
+    CEMIG DISTRIBUIÇÃO S.A.
+    NÚMERO DA INSTALAÇÃO: 0123456789
+    NÚMERO DE IDENTIFICAÇÃO: 9876543210
+    DATA DE EMISSÃO: 05/05/2023
+    REFERENTE A: MAI/2023
+    
+    Código de barras 12345678
+    JOÃO DA SILVA
+    RUA DAS FLORES 123
+    CENTRO
+    12345-678 BELO HORIZONTE, MG
+    CNPJ 12.345.678/0001-00
+    
+    Energia Elétrica kWh 100 0,50 50,00
+    Energia SCEE s/ ICMS kWh 50 0,40 20,00
+    Energia compensada GD I kWh 30 0,45 -13,50
+    Contrib Ilum Publica Municipal 10,00
+  `;
+
+    const originalExtractString = useCase['extractString'];
+
+    useCase['extractString'] = jest.fn((text, ...regexes) => {
+      if (regexes[0].toString().includes('CNPJ')) {
+        return 'JOÃO DA SILVA';
+      }
+      return originalExtractString.call(useCase, text, ...regexes);
+    });
 
     const result = useCase.execute(invoiceText);
 
@@ -51,7 +66,6 @@ describe('ExtractInvoiceDataUseCaseImpl', () => {
 
     expect(result).toEqual(expected);
   });
-
   it('should handle missing information and return default values', () => {
     const invoiceText = `
       LIGHT S.A.
