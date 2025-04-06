@@ -11,7 +11,7 @@ export class ExtractInvoiceDataUseCaseImpl
   execute(text: string): ExtractedInvoiceData {
     const registrationNumber = this.extractInstallationNumber(text);
 
-    const customerNameRegex = /DÉBITO AUTOMÁTICO\s+([^\n]+)/;
+    const customerNameRegex = /\n([^\n]+)\n[^\n]+\n[^\n]+\n[^\n]+\nCNPJ/;
     const customerName = this.extractString(text, customerNameRegex);
 
     const date = this.extractString(
