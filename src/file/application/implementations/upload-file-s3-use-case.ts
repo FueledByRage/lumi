@@ -5,10 +5,11 @@ import {
 } from '@aws-sdk/client-s3';
 import { UploadFileRequest, UploadFileUseCase } from '../upload-file.use-case';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 
 @Injectable()
 export class UploadFileS3UseCaseImpl implements UploadFileUseCase {
+  private readonly logger = new Logger();
   constructor(private readonly s3: S3Client) {}
 
   async execute({ file }: UploadFileRequest) {
@@ -32,7 +33,7 @@ export class UploadFileS3UseCaseImpl implements UploadFileUseCase {
         url: await this.getPresignedUrl(wholeKey),
       };
     } catch (error) {
-      console.log('Erro no upload: ', error);
+      this.logger.error('Erro ao fazer upload do arquivo para o S3', error);
 
       throw new Error('Não foi possível fazer upload do arquivo');
     }
@@ -61,7 +62,7 @@ export class UploadFileS3UseCaseImpl implements UploadFileUseCase {
         { expiresIn },
       );
     } catch (error) {
-      console.error('Erro ao gerar URL pré-assinada:', error);
+      this.logger.error('Erro ao gerar URL pré-assinada', error);
 
       throw new Error('Não foi possível gerar a URL pré-assinada');
     }

@@ -1,5 +1,5 @@
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Readable } from 'stream';
 
 export interface GeneratePresignedUrlRequest {
@@ -13,6 +13,8 @@ export interface GetFileReadableUseCase {
 
 @Injectable()
 export class GetFileReadableS3UseCaseImpl implements GetFileReadableUseCase {
+  private readonly logger = new Logger();
+
   constructor(private readonly s3: S3Client) {}
 
   async execute(params: GeneratePresignedUrlRequest): Promise<Readable> {
@@ -26,7 +28,7 @@ export class GetFileReadableS3UseCaseImpl implements GetFileReadableUseCase {
 
       return response.Body as Readable;
     } catch (error) {
-      console.error('Erro ao recuperar dados do arquivo:', error);
+      this.logger.error('Error getting file from S3', error);
 
       throw new Error('Falha ao recuperar o arquivo');
     }
