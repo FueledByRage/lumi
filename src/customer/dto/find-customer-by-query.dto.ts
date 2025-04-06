@@ -1,5 +1,13 @@
-import { IsOptional, IsInt, IsString, Min } from 'class-validator';
+import {
+  IsOptional,
+  IsInt,
+  IsString,
+  Min,
+  IsNotEmpty,
+  IsEnum,
+} from 'class-validator';
 import { Type } from 'class-transformer';
+import { FilterEnum } from '../use-cases/find-customers-by-query.use-case';
 
 export class FindCustomersByQueryDto {
   @Type(() => Number)
@@ -23,4 +31,8 @@ export class FindCustomersByQueryDto {
   @IsOptional()
   @IsString()
   registrationNumber?: string;
+
+  @IsNotEmpty()
+  @IsEnum(FilterEnum)
+  type: FilterEnum;
 }

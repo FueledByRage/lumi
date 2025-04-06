@@ -105,7 +105,7 @@ export class ExtractInvoiceDataUseCaseImpl
   private extractInstallationNumber(text: string): string {
     const regex = /\b\d{10}\b/g;
     const matches = text.match(regex);
-  
+
     if (matches && matches.length >= 2) {
       return matches[1]; // o segundo número
     }

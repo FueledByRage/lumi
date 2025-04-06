@@ -2,15 +2,10 @@ import { CustomerModel } from 'src/customer/entities/sequelize/customer';
 import { Repository } from 'typeorm';
 import { CustomerRepository } from '../../customer.repository';
 import { Inject, Injectable } from '@nestjs/common';
-
-export interface FindCustomersByQueryRequest {
-  page: number;
-  pageSize: number;
-  year: string;
-  name?: string;
-  distributor?: string;
-  registrationNumber?: string;
-}
+import {
+  FilterEnum,
+  FindCustomersByQueryRequest,
+} from 'src/customer/use-cases/find-customers-by-query.use-case';
 
 @Injectable()
 export class CustomerRepositoryImpl implements CustomerRepository {
@@ -24,9 +19,8 @@ export class CustomerRepositoryImpl implements CustomerRepository {
     return this.customerRepository.save(customerModel);
   }
 
-  async findByQuery(query: FindCustomersByQueryRequest) {
-    const { page, pageSize, year, distributor, registrationNumber } = query;
-
+  async findByQuery(request: FindCustomersByQueryRequest) {
+    const { page, pageSize, year, query, type } = request;
     const offset = (page - 1) * pageSize;
 
     const queryBuilder = this.customerRepository
@@ -46,18 +40,12 @@ export class CustomerRepositoryImpl implements CustomerRepository {
         { year },
       );
 
-    if (distributor) {
-      queryBuilder.andWhere('customer.distributor = :distributor', {
-        distributor,
+    if (query) {
+      const filter = this.buildQuery(type);
+
+      queryBuilder.andWhere(filter, {
+        queryPattern: `%${query}%`,
       });
-    }
-    if (registrationNumber) {
-      queryBuilder.andWhere(
-        'customer.registrationNumber = :registrationNumber',
-        {
-          registrationNumber,
-        },
-      );
     }
 
     const totalElements = await queryBuilder.getCount();
@@ -102,5 +90,19 @@ export class CustomerRepositoryImpl implements CustomerRepository {
       console.error('Error finding customer:', error);
       return null;
     }
+  }
+
+  private buildQuery(filterType: FilterEnum) {
+    const queries = {
+      [FilterEnum.CONSUMERS]: [
+        'LOWER(customer.name) LIKE LOWER(:queryPattern)',
+        'customer.registrationNumber LIKE :queryPattern',
+      ],
+      [FilterEnum.DISTRIBUTORS]: [
+        'LOWER(customer.distributor) LIKE LOWER(:queryPattern)',
+      ],
+    };
+
+    return queries[filterType].map((q) => `(${q})`).join(' OR ');
   }
 }
